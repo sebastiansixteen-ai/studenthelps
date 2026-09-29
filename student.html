@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudentHub | Project Management</title>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#1f2937;
+    transition:0.3s;
+}
+
+button,
+input,
+textarea,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none !important;
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark{
+    background:#111827;
+    color:#f3f4f6;
+}
+
+body.dark .main,
+body.dark .topbar,
+body.dark .card,
+body.dark .board,
+body.dark .modal-box,
+body.dark .profile-box,
+body.dark .project-card,
+body.dark .task-card,
+body.dark .member-card,
+body.dark .deadline-card,
+body.dark .setting-card{
+    background:#1f2937;
+    color:#f3f4f6;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark .project-card h3,
+body.dark .task-card h3{
+    color:#fff;
+}
+
+body.dark p,
+body.dark .muted{
+    color:#b9c2d0;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+    background:#111827;
+    color:white;
+    border-color:#374151;
+}
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    width:260px;
+    background:linear-gradient(180deg,#172554,#1e3a8a);
+    color:white;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    padding:25px 16px;
+    z-index:100;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px;
+    margin-bottom:30px;
+}
+
+.brand-logo{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    background:white;
+    color:#1e3a8a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.brand h2{
+    font-size:19px;
+}
+
+.brand span{
+    font-size:11px;
+    color:#cbd5e1;
+}
+
+.menu-title{
+    font-size:10px;
+    text-transform:uppercase;
+    color:#93a4c5;
+    margin:20px 12px 8px;
+    letter-spacing:1px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#dbeafe;
+    padding:13px 14px;
+    border-radius:11px;
+    text-align:left;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:.2s;
+}
+
+.nav button:hover{
+    background:rgba(255,255,255,.12);
+}
+
+.nav button.active{
+    background:white;
+    color:#1e3a8a;
+    font-weight:bold;
+}
+
+.nav-icon{
+    width:25px;
+    text-align:center;
+    font-size:17px;
+}
+
+.sidebar-bottom{
+    margin-top:35px;
+    border-top:1px solid rgba(255,255,255,.12);
+    padding-top:20px;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:260px;
+    width:calc(100% - 260px);
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    height:78px;
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.search{
+    width:330px;
+    position:relative;
+}
+
+.search input{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:12px;
+    padding:12px 15px 12px 40px;
+    outline:none;
+    background:#f8fafc;
+}
+
+.search span{
+    position:absolute;
+    left:14px;
+    top:11px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.icon-btn{
+    width:42px;
+    height:42px;
+    border-radius:11px;
+    border:1px solid #e5e7eb;
+    background:white;
+    position:relative;
+    font-size:17px;
+}
+
+.icon-btn:hover{
+    background:#f1f5f9;
+}
+
+.badge{
+    position:absolute;
+    top:-4px;
+    right:-4px;
+    background:#ef4444;
+    color:white;
+    font-size:9px;
+    min-width:17px;
+    height:17px;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+
+/* =========================================================
+   PROFILE BUTTON
+========================================================= */
+
+.profile-button{
+    border:0;
+    background:transparent;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:5px;
+    border-radius:12px;
+}
+
+.profile-button:hover{
+    background:#f1f5f9;
+}
+
+.avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.profile-text{
+    text-align:left;
+}
+
+.profile-text strong{
+    display:block;
+    font-size:13px;
+}
+
+.profile-text small{
+    color:#6b7280;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+    padding:30px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.page-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.page-heading h1{
+    color:#172554;
+    font-size:27px;
+}
+
+.page-heading p{
+    color:#6b7280;
+    margin-top:5px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    border:0;
+    border-radius:10px;
+    padding:11px 17px;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+}
+
+.primary:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#eef2ff;
+    color:#3730a3;
+}
+
+.danger{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+
+/* =========================================================
+   DASHBOARD CARDS
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    border-radius:17px;
+    padding:22px;
+    border:1px solid #e9edf3;
+    box-shadow:0 5px 18px rgba(15,23,42,.05);
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+}
+
+.stat-icon{
+    width:43px;
+    height:43px;
+    border-radius:12px;
+    background:#eff6ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:19px;
+}
+
+.stat-number{
+    font-size:28px;
+    font-weight:bold;
+    margin-top:15px;
+    color:#172554;
+}
+
+.stat-label{
+    color:#64748b;
+    font-size:13px;
+    margin-top:4px;
+}
+
+
+/* =========================================================
+   DASHBOARD GRID
+========================================================= */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+.board{
+    background:white;
+    border-radius:17px;
+    border:1px solid #e9edf3;
+    padding:23px;
+    margin-bottom:20px;
+}
+
+.board-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.board-title h2{
+    color:#172554;
+    font-size:19px;
+}
+
+
+/* =========================================================
+   PROJECT CARDS
+========================================================= */
+
+.project-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.project-card{
+    background:white;
+    border:1px solid #e3e8ef;
+    border-radius:15px;
+    padding:20px;
+    position:relative;
+}
+
+.project-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.project-top{
+    display:flex;
+    justify-content:space-between;
+}
+
+.project-icon{
+    width:44px;
+    height:44px;
+    background:#eef2ff;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.status{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+    background:#dcfce7;
+    color:#166534;
+}
+
+.project-card h3{
+    color:#172554;
+    margin-top:17px;
+    margin-bottom:7px;
+}
+
+.project-card p{
+    color:#64748b;
+    font-size:13px;
+    min-height:40px;
+}
+
+.project-progress{
+    margin-top:18px;
+}
+
+.progress-line{
+    height:8px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    border-radius:20px;
+}
+
+.progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    margin-bottom:7px;
+    color:#64748b;
+}
+
+.project-actions{
+    display:flex;
+    gap:7px;
+    margin-top:16px;
+}
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+.task-list{
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+}
+
+.task-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.task-card h3{
+    font-size:14px;
+    color:#172554;
+}
+
+.task-card p{
+    color:#64748b;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.task-check{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.task-check input{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+}
+
+.task-card.completed h3{
+    text-decoration:line-through;
+    color:#94a3b8;
+}
+
+
+/* =========================================================
+   MEMBERS
+========================================================= */
+
+.member-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.member-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    padding:22px;
+    text-align:center;
+}
+
+.member-card .avatar{
+    margin:auto;
+    width:62px;
+    height:62px;
+    font-size:20px;
+}
+
+.member-card h3{
+    margin-top:12px;
+    color:#172554;
+}
+
+.member-card p{
+    color:#64748b;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.member-card button{
+    margin-top:14px;
+}
+
+
+/* =========================================================
+   DEADLINES
+========================================================= */
+
+.deadline-list{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+}
+
+.deadline-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:13px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.date-box{
+    width:62px;
+    height:62px;
+    border-radius:12px;
+    background:#172554;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.date-box strong{
+    font-size:20px;
+}
+
+.date-box span{
+    font-size:9px;
+}
+
+.deadline-info{
+    flex:1;
+}
+
+.deadline-info h3{
+    color:#172554;
+    font-size:15px;
+}
+
+.deadline-info p{
+    color:#64748b;
+    font-size:12px;
+    margin-top:4px;
+}
+
+
+/* =========================================================
+   PROGRESS BOARD
+========================================================= */
+
+.big-progress{
+    display:grid;
+    grid-template-columns:250px 1fr;
+    gap:35px;
+    align-items:center;
+}
+
+.circle-progress{
+    width:190px;
+    height:190px;
+    border-radius:50%;
+    background:conic-gradient(#2563eb 0 65%,#e5e7eb 65% 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+}
+
+.circle-inner{
+    width:145px;
+    height:145px;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:31px;
+    font-weight:bold;
+    color:#172554;
+}
+
+body.dark .circle-inner{
+    background:#1f2937;
+    color:white;
+}
+
+.progress-row{
+    margin-bottom:22px;
+}
+
+.progress-row-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-box{
+    background:white;
+    border-radius:18px;
+    border:1px solid #e5e7eb;
+    overflow:hidden;
+}
+
+.profile-cover{
+    height:160px;
+    background:linear-gradient(120deg,#1d4ed8,#7c3aed);
+}
+
+.profile-main{
+    padding:0 30px 30px;
+    position:relative;
+}
+
+.profile-big-avatar{
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#9333ea);
+    color:white;
+    border:6px solid white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    font-weight:bold;
+    margin-top:-52px;
+}
+
+body.dark .profile-big-avatar{
+    border-color:#1f2937;
+}
+
+.profile-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:25px;
+}
+
+.detail{
+    padding:16px;
+    background:#f8fafc;
+    border-radius:11px;
+}
+
+body.dark .detail{
+    background:#111827;
+}
+
+.detail span{
+    display:block;
+    color:#64748b;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.detail strong{
+    font-size:14px;
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.setting-card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.setting-card h3{
+    color:#172554;
+    font-size:15px;
+}
+
+.setting-card p{
+    color:#64748b;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.switch{
+    width:48px;
+    height:25px;
+    border-radius:20px;
+    background:#cbd5e1;
+    position:relative;
+    cursor:pointer;
+}
+
+.switch::after{
+    content:"";
+    width:19px;
+    height:19px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:3px;
+    left:3px;
+    transition:.2s;
+}
+
+.switch.on{
+    background:#2563eb;
+}
+
+.switch.on::after{
+    left:26px;
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+.notification-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.notification{
+    display:flex;
+    gap:13px;
+    padding:16px;
+    border-radius:12px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+}
+
+body.dark .notification{
+    background:#111827;
+}
+
+.notification-icon{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    background:#dbeafe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.notification h3{
+    font-size:14px;
+}
+
+.notification p{
+    color:#64748b;
+    font-size:12px;
+    margin-top:4px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.65);
+    z-index:999;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:500px;
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    animation:pop .2s ease;
+}
+
+@keyframes pop{
+    from{
+        transform:scale(.94);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-head h2{
+    color:#172554;
+}
+
+.close{
+    border:0;
+    background:none;
+    font-size:27px;
+    color:#64748b;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:9px;
+    padding:11px;
+    outline:none;
+}
+
+.form-group textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.modal-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:20px;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#172554;
+    color:white;
+    padding:14px 20px;
+    border-radius:11px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    transform:translateY(100px);
+    opacity:0;
+    transition:.3s;
+    z-index:2000;
+    font-size:13px;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .project-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dashboard-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        width:210px;
+    }
+
+    .main{
+        margin-left:210px;
+        width:calc(100% - 210px);
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .search{
+        width:220px;
+    }
+
+    .member-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .app{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+
+    .nav{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .topbar{
+        position:relative;
+        height:auto;
+        padding:15px;
+        flex-wrap:wrap;
+        gap:12px;
+    }
+
+    .search{
+        width:100%;
+    }
+
+    .profile-text{
+        display:none;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .project-grid,
+    .member-grid{
+        grid-template-columns:1fr;
+    }
+
+    .big-progress{
+        grid-template-columns:1fr;
+    }
+
+    .profile-details{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            🎓
+        </div>
+
+        <div>
+            <h2>StudentHub</h2>
+            <span>Project Workspace</span>
+        </div>
+
+    </div>
+
+
+    <div class="menu-title">
+        Workspace
+    </div>
+
+
+    <nav class="nav">
+
+        <button class="active" data-page="dashboard">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </button>
+
+        <button data-page="projects">
+            <span class="nav-icon">📁</span>
+            Projects
+        </button>
+
+        <button data-page="tasks">
+            <span class="nav-icon">✓</span>
+            Tasks
+        </button>
+
+        <button data-page="members">
+            <span class="nav-icon">👥</span>
+            Group Members
+        </button>
+
+        <button data-page="deadlines">
+            <span class="nav-icon">📅</span>
+            Deadlines
+        </button>
+
+        <button data-page="progress">
+            <span class="nav-icon">📊</span>
+            Progress
+        </button>
+
+    </nav>
+
+
+    <div class="menu-title">
+        Account
+    </div>
+
+
+    <nav class="nav">
+
+        <button data-page="profile">
+            <span class="nav-icon">👤</span>
+            My Profile
+        </button>
+
+        <button data-page="notifications">
+            <span class="nav-icon">🔔</span>
+            Notifications
+        </button>
+
+        <button data-page="settings">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <button
+            class="nav-button"
+            onclick="showToast('StudentHub is ready!')"
+            style="
+            width:100%;
+            padding:12px;
+            border:0;
+            border-radius:10px;
+            background:rgba(255,255,255,.1);
+            color:white;
+            ">
+            💡 Help Center
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="main">
+
+
+<!-- =====================================================
+     TOPBAR
+====================================================== -->
+
+<header class="topbar">
+
+    <div class="search">
+
+        <span>🔍</span>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search projects, tasks..."
+        >
+
+    </div>
+
+
+    <div class="top-actions">
+
+        <button
+            class="icon-btn"
+            onclick="toggleDarkMode()"
+            title="Dark Mode">
+            🌙
+        </button>
+
+
+        <button
+            class="icon-btn"
+            onclick="goToPage('notifications')"
+            title="Notifications">
+
+            🔔
+
+            <span
+                id="notificationBadge"
+                class="badge">
+                3
+            </span>
+
+        </button>
+
+
+        <button
+            class="profile-button"
+            onclick="goToPage('profile')">
+
+            <div class="avatar">
+                M
+            </div>
+
+            <div class="profile-text">
+
+                <strong id="topProfileName">
+                    Marian
+                </strong>
+
+                <small>
+                    Student
+                </small>
+
+            </div>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<div class="content">
+
+
+<!-- =====================================================
+     DASHBOARD
+====================================================== -->
+
+<section
+    id="dashboard"
+    class="page active">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Good day, Marian! 👋</h1>
+
+            <p>
+                Here's what's happening with your projects today.
+            </p>
+        </div>
+
+        <button
+            class="btn primary"
+            onclick="goToPage('projects');openProjectModal()">
+            + New Project
+        </button>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="card">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Total Projects
+                    </div>
+
+                    <div
+                        id="projectCount"
+                        class="stat-number">
+                        3
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    📁
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Active Tasks
+                    </div>
+
+                    <div
+                        id="taskCount"
+                        class="stat-number">
+                        5
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Group Members
+                    </div>
+
+                    <div class="stat-number">
+                        5
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="stat-top">
+
+                <div>
+                    <div class="stat-label">
+                        Overall Progress
+                    </div>
+
+                    <div
+                        id="overallProgress"
+                        class="stat-number">
+                        65%
+                    </div>
+                </div>
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="dashboard-grid">
+
+
+        <div class="board">
+
+            <div class="board-title">
+
+                <h2>My Projects</h2>
+
+                <button
+                    class="btn secondary"
+                    onclick="goToPage('projects')">
+                    View All
+                </button>
+
+            </div>
+
+
+            <div
+                id="dashboardProjects"
+                class="project-grid">
+
+            </div>
+
+        </div>
+
+
+
+        <div class="board">
+
+            <div class="board-title">
+
+                <h2>Upcoming Tasks</h2>
+
+                <button
+                    class="btn secondary"
+                    onclick="goToPage('tasks')">
+                    View Tasks
+                </button>
+
+            </div>
+
+
+            <div
+                id="dashboardTasks"
+                class="task-list">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PROJECTS
+====================================================== -->
+
+<section
+    id="projects"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Projects 📁</h1>
+
+            <p>
+                Create, organize and track your projects.
+            </p>
+        </div>
+
+        <button
+            class="btn primary"
+            onclick="openProjectModal()">
+            + Add Project
+        </button>
+
+    </div>
+
+
+    <div
+        id="projectGrid"
+        class="project-grid">
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TASKS
+====================================================== -->
+
+<section
+    id="tasks"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Tasks ✓</h1>
+
+            <p>
+                Keep track of everything you need to accomplish.
+            </p>
+        </div>
+
+        <button
+            class="btn primary"
+            onclick="openTaskModal()">
+            + Add Task
+        </button>
+
+    </div>
+
+
+    <div
+        id="taskBoard"
+        class="task-list">
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MEMBERS
+====================================================== -->
+
+<section
+    id="members"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Group Members 👥</h1>
+
+            <p>
+                Your project team and their roles.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="member-grid">
+
+        <div class="member-card">
+
+            <div class="avatar">
+                P
+            </div>
+
+            <h3>Prima</h3>
+
+            <p>Project Member</p>
+
+            <button
+                class="btn secondary"
+                onclick="showToast('Prima is a project member.')">
+                View Member
+            </button>
+
+        </div>
+
+
+        <div class="member-card">
+
+            <div class="avatar">
+                G
+            </div>
+
+            <h3>Gian</h3>
+
+            <p>Project Member</p>
+
+            <button
+                class="btn secondary"
+                onclick="showToast('Gian is a project member.')">
+                View Member
+            </button>
+
+        </div>
+
+
+        <div class="member-card">
+
+            <div class="avatar">
+                R
+            </div>
+
+            <h3>Rhea</h3>
+
+            <p>Project Member</p>
+
+            <button
+                class="btn secondary"
+                onclick="showToast('Rhea is a project member.')">
+                View Member
+            </button>
+
+        </div>
+
+
+        <div class="member-card">
+
+            <div class="avatar">
+                M
+            </div>
+
+            <h3>Marian</h3>
+
+            <p>Project Leader</p>
+
+            <button
+                class="btn secondary"
+                onclick="goToPage('profile')">
+                My Profile
+            </button>
+
+        </div>
+
+
+        <div class="member-card">
+
+            <div class="avatar">
+                S
+            </div>
+
+            <h3>Sebastian</h3>
+
+            <p>Project Member</p>
+
+            <button
+                class="btn secondary"
+                onclick="showToast('Sebastian is a project member.')">
+                View Member
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DEADLINES
+====================================================== -->
+
+<section
+    id="deadlines"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Deadlines 📅</h1>
+
+            <p>
+                Never miss an important submission.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="board">
+
+        <div class="deadline-list">
+
+            <div class="deadline-card">
+
+                <div class="date-box">
+                    <strong>25</strong>
+                    <span>SEP</span>
+                </div>
+
+                <div class="deadline-info">
+
+                    <h3>HTML Interface</h3>
+
+                    <p>
+                        Complete the website interface.
+                    </p>
+
+                </div>
+
+                <span class="status">
+                    Upcoming
+                </span>
+
+            </div>
+
+
+            <div class="deadline-card">
+
+                <div class="date-box">
+                    <strong>28</strong>
+                    <span>SEP</span>
+                </div>
+
+                <div class="deadline-info">
+
+                    <h3>Documentation</h3>
+
+                    <p>
+                        Submit the written project documentation.
+                    </p>
+
+                </div>
+
+                <span class="status">
+                    Upcoming
+                </span>
+
+            </div>
+
+
+            <div class="deadline-card">
+
+                <div class="date-box">
+                    <strong>02</strong>
+                    <span>OCT</span>
+                </div>
+
+                <div class="deadline-info">
+
+                    <h3>Final Presentation</h3>
+
+                    <p>
+                        Present the completed system.
+                    </p>
+
+                </div>
+
+                <span class="status">
+                    Upcoming
+                </span>
+
+            </div>
+
+
+            <div class="deadline-card">
+
+                <div class="date-box">
+                    <strong>05</strong>
+                    <span>OCT</span>
+                </div>
+
+                <div class="deadline-info">
+
+                    <h3>Final Submission</h3>
+
+                    <p>
+                        Submit the final project.
+                    </p>
+
+                </div>
+
+                <span class="status">
+                    Upcoming
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PROGRESS
+====================================================== -->
+
+<section
+    id="progress"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>Progress 📊</h1>
+
+            <p>
+                See how far your projects have progressed.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="board">
+
+        <div class="big-progress">
+
+            <div>
+
+                <div class="circle-progress">
+
+                    <div class="circle-inner">
+                        65%
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="progress-row">
+
+                    <div class="progress-row-head">
+                        <span>Student Management System</span>
+                        <span>75%</span>
+                    </div>
+
+                    <div class="progress-line">
+                        <div
+                            class="progress-fill"
+                            style="width:75%">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-row">
+
+                    <div class="progress-row-head">
+                        <span>School Canteen App</span>
+                        <span>65%</span>
+                    </div>
+
+                    <div class="progress-line">
+                        <div
+                            class="progress-fill"
+                            style="width:65%">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-row">
+
+                    <div class="progress-row-head">
+                        <span>Environmental Project</span>
+                        <span>45%</span>
+                    </div>
+
+                    <div class="progress-line">
+                        <div
+                            class="progress-fill"
+                            style="width:45%">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PROFILE
+====================================================== -->
+
+<section
+    id="profile"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+            <h1>My Profile 👤</h1>
+
+            <p>
+                Manage your student information.
+            </p>
+        </div>
+
+        <button
+            class="btn primary"
+            onclick="openProfileModal()">
+            ✏️ Edit Profile
+        </button>
+
+    </div>
+
+
+    <div class="profile-box">
+
+        <div class="profile-cover"></div>
+
+        <div class="profile-main">
+
+            <div
+                id="bigProfileAvatar"
+                class="profile-big-avatar">
+                M
+            </div>
+
+
+            <h2
+                id="profileName"
+                style="margin-top:15px;">
+                Marian Naguimbing
+            </h2>
+
+            <p
+                id="profileRole"
+                style="color:#64748b;margin-top:5px;">
+                Student • Project Leader
+            </p>
+
+
+            <div class="profile-details">
+
+                <div class="detail">
+
+                    <span>
+                        FULL NAME
+                    </span>
+
+                    <strong id="profileFullName">
+                        Marian Naguimbing
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        ROLE
+                    </span>
+
+                    <strong>
+                        Student
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        EMAIL
+                    </span>
+
+                    <strong id="profileEmail">
+                        marian@student.com
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        PROJECT ROLE
+                    </span>
+
+                    <strong>
+                        Project Leader
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        PROJECTS
+                    </span>
+
+                    <strong id="profileProjectCount">
+                        3 Active Projects
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>
+                        TASKS
+                    </span>
+
+                    <strong id="profileTaskCount">
+                        5 Tasks
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     NOTIFICATIONS
+====================================================== -->
+
+<section
+    id="notifications"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>Notifications 🔔</h1>
+
+            <p>
+                Stay updated with your project activities.
+            </p>
+
+        </div>
+
+
+        <button
+            class="btn secondary"
+            onclick="markNotificationsRead()">
+            Mark All Read
+        </button>
+
+    </div>
+
+
+    <div class="board">
+
+        <div
+            id="notificationList"
+            class="notification-list">
+
+            <div class="notification">
+
+                <div class="notification-icon">
+                    📅
+                </div>
+
+                <div>
+
+                    <h3>Deadline approaching</h3>
+
+                    <p>
+                        Your HTML Interface deadline is coming soon.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="notification">
+
+                <div class="notification-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h3>Task reminder</h3>
+
+                    <p>
+                        You still have pending project tasks.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="notification">
+
+                <div class="notification-icon">
+                    👥
+                </div>
+
+                <div>
+
+                    <h3>Group update</h3>
+
+                    <p>
+                        Your group members are working on the project.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SETTINGS
+====================================================== -->
+
+<section
+    id="settings"
+    class="page">
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>Settings ⚙️</h1>
+
+            <p>
+                Customize your StudentHub experience.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="setting-card">
+
+        <div>
+
+            <h3>Dark Mode</h3>
+
+            <p>
+                Change the appearance of the application.
+            </p>
+
+        </div>
+
+        <div
+            id="darkSwitch"
+            class="switch"
+            onclick="toggleDarkMode()">
+        </div>
+
+    </div>
+
+
+    <div class="setting-card">
+
+        <div>
+
+            <h3>Notifications</h3>
+
+            <p>
+                Receive project reminders and updates.
+            </p>
+
+        </div>
+
+        <div
+            id="notificationSwitch"
+            class="switch on"
+            onclick="toggleNotifications()">
+        </div>
+
+    </div>
+
+
+    <div class="setting-card">
+
+        <div>
+
+            <h3>Auto Save</h3>
+
+            <p>
+                Automatically save project changes.
+            </p>
+
+        </div>
+
+        <div
+            id="saveSwitch"
+            class="switch on"
+            onclick="toggleSwitch('saveSwitch')">
+        </div>
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+</div>
+
+
+
+<!-- =====================================================
+     PROJECT MODAL
+====================================================== -->
+
+<div
+    id="projectModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h2>✨ Create Project</h2>
+
+            <button
+                class="close"
+                onclick="closeProjectModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="projectForm">
+
+            <div class="form-group">
+
+                <label>
+                    Project Name
+                </label>
+
+                <input
+                    id="newProjectName"
+                    type="text"
+                    placeholder="Example: Mobile App"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="newProjectDescription"
+                    placeholder="Describe your project..."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select id="newProjectStatus">
+
+                    <option>
+                        Planning
+                    </option>
+
+                    <option>
+                        In Progress
+                    </option>
+
+                    <option>
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closeProjectModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary">
+                    Create Project
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TASK MODAL
+====================================================== -->
+
+<div
+    id="taskModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h2>✓ Create Task</h2>
+
+            <button
+                class="close"
+                onclick="closeTaskModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="taskForm">
+
+            <div class="form-group">
+
+                <label>
+                    Task Name
+                </label>
+
+                <input
+                    id="newTaskName"
+                    type="text"
+                    placeholder="Example: Finish documentation"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="newTaskDescription"
+                    placeholder="What needs to be done?"
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select id="newTaskStatus">
+
+                    <option>
+                        Pending
+                    </option>
+
+                    <option>
+                        In Progress
+                    </option>
+
+                    <option>
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closeTaskModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary">
+                    Add Task
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     PROFILE MODAL
+====================================================== -->
+
+<div
+    id="profileModal"
+    class="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h2>✏️ Edit Profile</h2>
+
+            <button
+                class="close"
+                onclick="closeProfileModal()">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="profileForm">
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    id="editName"
+                    type="text"
+                    value="Marian Naguimbing"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="editEmail"
+                    type="email"
+                    value="marian@student.com"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Role
+                </label>
+
+                <select id="editRole">
+
+                    <option>
+                        Student
+                    </option>
+
+                    <option>
+                        Project Leader
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="modal-buttons">
+
+                <button
+                    type="button"
+                    class="btn secondary"
+                    onclick="closeProfileModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn primary">
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+    id="toast"
+    class="toast">
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let projects = [
+
+    {
+        id:1,
+        name:"Student Management System",
+        description:"A system for managing student information and activities.",
+        status:"In Progress",
+        progress:75
+    },
+
+    {
+        id:2,
+        name:"School Canteen App",
+        description:"An application for organizing school canteen orders.",
+        status:"In Progress",
+        progress:65
+    },
+
+    {
+        id:3,
+        name:"Environmental Project",
+        description:"An innovation project focused on sustainability.",
+        status:"Planning",
+        progress:45
+    }
+
+];
+
+
+let tasks = [
+
+    {
+        id:1,
+        name:"Finish HTML Design",
+        description:"Complete the website interface.",
+        status:"Pending"
+    },
+
+    {
+        id:2,
+        name:"Write Documentation",
+        description:"Prepare the project documentation.",
+        status:"Pending"
+    },
+
+    {
+        id:3,
+        name:"Test Application",
+        description:"Test all buttons and system features.",
+        status:"In Progress"
+    },
+
+    {
+        id:4,
+        name:"Prepare Presentation",
+        description:"Create slides for the project presentation.",
+        status:"Pending"
+    },
+
+    {
+        id:5,
+        name:"Final Project Review",
+        description:"Review everything before submission.",
+        status:"Pending"
+    }
+
+];
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+const navButtons =
+    document.querySelectorAll(".nav button[data-page]");
+
+const pages =
+    document.querySelectorAll(".page");
+
+
+navButtons.forEach(button => {
+
+    button.addEventListener("click",function(){
+
+        const page =
+            this.getAttribute("data-page");
+
+        goToPage(page);
+
+    });
+
+});
+
+
+function goToPage(pageName){
+
+    pages.forEach(page => {
+
+        page.classList.remove("active");
+
+    });
+
+
+    navButtons.forEach(button => {
+
+        button.classList.remove("active");
+
+        if(
+            button.getAttribute("data-page")
+            === pageName
+        ){
+            button.classList.add("active");
+        }
+
+    });
+
+
+    const selected =
+        document.getElementById(pageName);
+
+    if(selected){
+        selected.classList.add("active");
+    }
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   PROJECT RENDER
+========================================================= */
+
+function renderProjects(){
+
+    const grid =
+        document.getElementById("projectGrid");
+
+    const dashboard =
+        document.getElementById("dashboardProjects");
+
+
+    grid.innerHTML="";
+    dashboard.innerHTML="";
+
+
+    projects.forEach(project => {
+
+        const card =
+            createProjectCard(project);
+
+        grid.appendChild(card);
+
+
+        const dashboardCard =
+            createProjectCard(project);
+
+        dashboardCard.querySelectorAll(".project-actions")
+            .forEach(action => action.remove());
+
+        dashboard.appendChild(dashboardCard);
+
+    });
+
+
+    document.getElementById("projectCount")
+        .textContent = projects.length;
+
+    document.getElementById("profileProjectCount")
+        .textContent =
+        projects.length + " Active Projects";
+
+}
+
+
+/* =========================================================
+   CREATE PROJECT CARD
+========================================================= */
+
+function createProjectCard(project){
+
+    const card =
+        document.createElement("div");
+
+    card.className="project-card";
+
+
+    card.innerHTML=`
+
+        <div class="project-top">
+
+            <div class="project-icon">
+                📁
+            </div>
+
+            <span class="status">
+                ${project.status}
+            </span>
+
+        </div>
+
+
+        <h3>
+            ${escapeHTML(project.name)}
+        </h3>
+
+
+        <p>
+            ${escapeHTML(project.description)}
+        </p>
+
+
+        <div class="project-progress">
+
+            <div class="progress-label">
+
+                <span>Progress</span>
+
+                <span>
+                    ${project.progress}%
+                </span>
+
+            </div>
+
+
+            <div class="progress-line">
+
+                <div
+                    class="progress-fill"
+                    style="width:${project.progress}%">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="project-actions">
+
+            <button
+                class="btn secondary"
+                onclick="viewProject(${project.id})">
+                👁 View
+            </button>
+
+
+            <button
+                class="btn danger"
+                onclick="deleteProject(${project.id})">
+                🗑
+            </button>
+
+        </div>
+
+    `;
+
+
+    return card;
+
+}
+
+
+/* =========================================================
+   VIEW PROJECT
+========================================================= */
+
+function viewProject(id){
+
+    const project =
+        projects.find(p => p.id === id);
+
+    if(!project) return;
+
+
+    showToast(
+        project.name +
+        " • " +
+        project.progress +
+        "% complete"
+    );
+
+}
+
+
+/* =========================================================
+   DELETE PROJECT
+========================================================= */
+
+function deleteProject(id){
+
+    const project =
+        projects.find(p => p.id === id);
+
+    if(!project) return;
+
+
+    if(
+        confirm(
+            "Delete '" +
+            project.name +
+            "'?"
+        )
+    ){
+
+        projects =
+            projects.filter(
+                p => p.id !== id
+            );
+
+        renderProjects();
+
+        showToast("Project deleted.");
+
+    }
+
+}
+
+
+/* =========================================================
+   ADD PROJECT MODAL
+========================================================= */
+
+function openProjectModal(){
+
+    document
+        .getElementById("projectModal")
+        .classList.add("show");
+
+}
+
+
+function closeProjectModal(){
+
+    document
+        .getElementById("projectModal")
+        .classList.remove("show");
+
+}
+
+
+document
+.getElementById("projectForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+
+    const project = {
+
+        id:Date.now(),
+
+        name:
+            document
+            .getElementById("newProjectName")
+            .value,
+
+        description:
+            document
+            .getElementById("newProjectDescription")
+            .value,
+
+        status:
+            document
+            .getElementById("newProjectStatus")
+            .value,
+
+        progress:0
+
+    };
+
+
+    projects.push(project);
+
+
+    renderProjects();
+
+
+    this.reset();
+
+    closeProjectModal();
+
+    showToast("New project created! 🎉");
+
+});
+
+
+/* =========================================================
+   TASK RENDER
+========================================================= */
+
+function renderTasks(){
+
+    const board =
+        document.getElementById("taskBoard");
+
+    const dashboard =
+        document.getElementById("dashboardTasks");
+
+
+    board.innerHTML="";
+    dashboard.innerHTML="";
+
+
+    tasks.forEach(task => {
+
+        const item =
+            createTask(task);
+
+        board.appendChild(item);
+
+
+        const dashboardItem =
+            createTask(task);
+
+        dashboardItem
+            .querySelector(".task-check input")
+            ?.remove();
+
+        dashboard.appendChild(
+            dashboardItem
+        );
+
+    });
+
+
+    document.getElementById("taskCount")
+        .textContent = tasks.length;
+
+
+    document.getElementById("profileTaskCount")
+        .textContent =
+        tasks.length + " Tasks";
+
+}
+
+
+/* =========================================================
+   CREATE TASK
+========================================================= */
+
+function createTask(task){
+
+    const card =
+        document.createElement("div");
+
+    card.className="task-card";
+
+
+    if(task.status === "Completed"){
+        card.classList.add("completed");
+    }
+
+
+    card.innerHTML=`
+
+        <div class="task-check">
+
+            <input
+                type="checkbox"
+                ${task.status==="Completed" ? "checked" : ""}
+                onchange="completeTask(${task.id},this)">
+
+            <div>
+
+                <h3>
+                    ${escapeHTML(task.name)}
+                </h3>
+
+                <p>
+                    ${escapeHTML(task.description)}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <span class="status">
+            ${task.status}
+        </span>
+
+    `;
+
+
+    return card;
+
+}
+
+
+/* =========================================================
+   COMPLETE TASK
+========================================================= */
+
+function completeTask(id,checkbox){
+
+    const task =
+        tasks.find(t => t.id === id);
+
+    if(!task) return;
+
+
+    task.status =
+        checkbox.checked
+        ? "Completed"
+        : "Pending";
+
+
+    renderTasks();
+
+
+    showToast(
+        checkbox.checked
+        ? "Task completed! 🎉"
+        : "Task marked as pending."
+    );
+
+}
+
+
+/* =========================================================
+   ADD TASK
+========================================================= */
+
+function openTaskModal(){
+
+    document
+        .getElementById("taskModal")
+        .classList.add("show");
+
+}
+
+
+function closeTaskModal(){
+
+    document
+        .getElementById("taskModal")
+        .classList.remove("show");
+
+}
+
+
+document
+.getElementById("taskForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+
+    const task = {
+
+        id:Date.now(),
+
+        name:
+            document
+            .getElementById("newTaskName")
+            .value,
+
+        description:
+            document
+            .getElementById("newTaskDescription")
+            .value,
+
+        status:
+            document
+            .getElementById("newTaskStatus")
+            .value
+
+    };
+
+
+    tasks.push(task);
+
+
+    renderTasks();
+
+
+    this.reset();
+
+    closeTaskModal();
+
+    showToast("New task added! ✓");
+
+});
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function openProfileModal(){
+
+    document
+        .getElementById("profileModal")
+        .classList.add("show");
+
+}
+
+
+function closeProfileModal(){
+
+    document
+        .getElementById("profileModal")
+        .classList.remove("show");
+
+}
+
+
+document
+.getElementById("profileForm")
+.addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+
+    const name =
+        document
+        .getElementById("editName")
+        .value;
+
+
+    const email =
+        document
+        .getElementById("editEmail")
+        .value;
+
+
+    const role =
+        document
+        .getElementById("editRole")
+        .value;
+
+
+    document
+        .getElementById("profileName")
+        .textContent=name;
+
+
+    document
+        .getElementById("profileFullName")
+        .textContent=name;
+
+
+    document
+        .getElementById("profileEmail")
+        .textContent=email;
+
+
+    document
+        .getElementById("profileRole")
+        .textContent =
+        "Student • " + role;
+
+
+    document
+        .getElementById("topProfileName")
+        .textContent =
+        name.split(" ")[0];
+
+
+    const firstLetter =
+        name.charAt(0).toUpperCase();
+
+
+    document
+        .getElementById("bigProfileAvatar")
+        .textContent =
+        firstLetter;
+
+
+    closeProfileModal();
+
+
+    showToast("Profile updated! ✓");
+
+});
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+
+    const isDark =
+        document.body.classList.contains("dark");
+
+
+    const switcher =
+        document.getElementById("darkSwitch");
+
+
+    if(switcher){
+
+        switcher.classList.toggle(
+            "on",
+            isDark
+        );
+
+    }
+
+
+    showToast(
+        isDark
+        ? "Dark mode enabled 🌙"
+        : "Light mode enabled ☀️"
+    );
+
+}
+
+
+/* =========================================================
+   SETTINGS SWITCH
+========================================================= */
+
+function toggleSwitch(id){
+
+    const element =
+        document.getElementById(id);
+
+    element.classList.toggle("on");
+
+    showToast("Setting updated.");
+
+}
+
+
+function toggleNotifications(){
+
+    const element =
+        document.getElementById(
+            "notificationSwitch"
+        );
+
+    element.classList.toggle("on");
+
+    showToast(
+        element.classList.contains("on")
+        ? "Notifications enabled."
+        : "Notifications disabled."
+    );
+
+}
+
+
+/* =========================================================
+   MARK NOTIFICATIONS READ
+========================================================= */
+
+function markNotificationsRead(){
+
+    document
+        .getElementById("notificationBadge")
+        .style.display="none";
+
+
+    showToast(
+        "All notifications marked as read."
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+document
+.getElementById("searchInput")
+.addEventListener("input",function(){
+
+    const query =
+        this.value.toLowerCase().trim();
+
+
+    if(query === ""){
+
+        renderProjects();
+
+        return;
+
+    }
+
+
+    const results =
+        projects.filter(project =>
+
+            project.name
+                .toLowerCase()
+                .includes(query)
+
+            ||
+
+            project.description
+                .toLowerCase()
+                .includes(query)
+
+        );
+
+
+    const grid =
+        document.getElementById("projectGrid");
+
+
+    goToPage("projects");
+
+
+    grid.innerHTML="";
+
+
+    if(results.length === 0){
+
+        grid.innerHTML=`
+
+            <div class="board">
+
+                <h3>No projects found 🔍</h3>
+
+                <p style="margin-top:8px;color:#64748b;">
+                    Try another search.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    results.forEach(project => {
+
+        grid.appendChild(
+            createProjectCard(project)
+        );
+
+    });
+
+});
+
+
+/* =========================================================
+   MODAL OUTSIDE CLICK
+========================================================= */
+
+window.addEventListener("click",function(e){
+
+    if(
+        e.target ===
+        document.getElementById("projectModal")
+    ){
+        closeProjectModal();
+    }
+
+
+    if(
+        e.target ===
+        document.getElementById("taskModal")
+    ){
+        closeTaskModal();
+    }
+
+
+    if(
+        e.target ===
+        document.getElementById("profileModal")
+    ){
+        closeProfileModal();
+    }
+
+});
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key === "Escape"){
+
+        closeProjectModal();
+        closeTaskModal();
+        closeProfileModal();
+
+    }
+
+});
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(function(){
+
+            toast.classList.remove("show");
+
+        },2500);
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHTML(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent=text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+renderProjects();
+
+renderTasks();
+
+</script>
+
+</body>
+</html>
